@@ -2,7 +2,7 @@
 
 from collections import MutableMapping
 from bisect import bisect_left, insort_left
-import obliv
+from .idstr import idstr
 
 class ListStash(MutableMapping):
     """Simple data structure to hold the stash.
@@ -106,7 +106,7 @@ class SkipStash(MutableMapping):
                 links = links[level].links
             else:
                 return links[level].value
-        raise KeyError("key not found in stash: " + obliv.voram.idstr(key))
+        raise KeyError("key not found in stash: " + idstr(key))
 
     def __setitem__(self, key, value):
         key_level = self._height(key)
@@ -152,7 +152,7 @@ class SkipStash(MutableMapping):
                 level -= 1
 
         if not removed:
-            raise KeyError("key not removed from stash: " + obliv.voram.idstr(key))
+            raise KeyError("key not removed from stash: " + idstr(key))
         else:
             self._size -= 1
 

@@ -23,8 +23,9 @@ import Crypto
 from Crypto.Cipher import AES
 from Crypto import Random
 
-from obliv.stash import SkipStash, DictStash
-from obliv.progbar import ProgressBar
+from . import stash as stashmod
+from .progbar import ProgressBar
+from .idstr import idstr
 
 logger = logging.getLogger(__name__) # used to write log messages for this module
 
@@ -264,7 +265,7 @@ Chunk headers take up {} = {} for id and {} for length.
         # The cache holds data that has been read but not yet written back.
         # All positions that are to be written back are stored in a buffer.
         # The keys of children of all cache nodes are stored until written
-        self._stash = DictStash() if stash is None else stash
+        self._stash = stashmod.DictStash() if stash is None else stash
         self._cache = {}
         self._write_buffer = set()
         self._node_keys = {}
@@ -863,9 +864,4 @@ class Ref:
 
     def __str__(self):
         return idstr(self.ident)
-
-
-def idstr(ident):
-    """Returns a string for the given identifier."""
-    return 'ident:' + hex(int.from_bytes(ident,'big')).lstrip('0x')
 

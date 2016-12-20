@@ -22,7 +22,7 @@ import logging
 
 import paramiko
 
-from obliv import sftp
+from . import sftp
 
 logger = logging.getLogger(__name__)
 

@@ -10,8 +10,8 @@ import hashlib
 import pickle
 import sys
 
-from obliv import voram
-from obliv.progbar import ProgressBar
+from . import voram
+from .progbar import ProgressBar
 
 def estimate_B(nodesize, idlen, keylen, lenlen, hashlen, valsize):
     """Returns (B, LeafB) for the Hirb with ORAM parameters as specified"""

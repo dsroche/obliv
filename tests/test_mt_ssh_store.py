@@ -5,15 +5,23 @@
 import unittest
 import tempfile
 import random
-from obliv import mt_ssh_store
-from .get_ssh_info import get_info
 
 def randbytes(s):
     return bytes(random.getrandbits(8) for _ in range(s))
 
 class TestSSHStore(unittest.TestCase):
     def setUp(self):
-        self.info = get_info()
+        global mt_ssh_store
+        try:
+            from obliv import mt_ssh_store
+            from . import get_ssh_info
+        except ImportError:
+            self.skipTest("Error importing sftp module. Maybe paramiko is not installed?")
+
+        self.info = get_ssh_info.load_info()
+        if self.info is None:
+            self.skipTest('Could not load ssh info. Run "python3 -m tests.get_ssh_info" to set it up.')
+
         self.dirname = "test_ssh_store"
         random.seed(0xf00dface)
 

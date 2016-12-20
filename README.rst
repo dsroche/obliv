@@ -31,9 +31,11 @@ for anything important.
 Installing
 ==========
 
-The ``obliv`` package is based on Python3, and I think it requires
+The ``obliv`` package is based on Python3, and requires
 version 3.4 or later. You will also need ``pycrypto`` and ``paramiko``,
 which are both freely available through PyPI and pip_.
+(Actually, the paramiko library is only needed if you want to run ORAMs over
+SSH and is not required for the core functionality.)
 
 .. _pip: https://pip.pypa.io/en/latest/installing/
 
@@ -50,7 +52,7 @@ can use Python's virtualenv_ system to make a mini-container for everything
 it needs. For example::
 
     pip3 install virtualenv wheel   # install virtualenv
-    virtualenv venv                 # put package stuff in venv folder
+    virtualenv -p python3 venv      # put package stuff in venv folder
     source venv/bin/activate        # go into the Python virtualenv
     pip3 install -e .               # install obliv package in the virtualenv
     (here you can use the obliv package freely)
@@ -73,6 +75,13 @@ from the top-level directory, which will automagically find the test cases
 and run them. To run just one test case, such as ``test_fstore``, do::
 
     python3 -m tests.test_fstore -v
+
+In order to test the SSH storage options, you need to connect using
+public/private keys and store information about what server to connect to.
+By default these tests are skipped. To save the information on what
+server to connect to (and how), run::
+
+    python3 -m tests.get_ssh_info
 
 Package Overview
 ================

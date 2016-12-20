@@ -4,15 +4,23 @@
 
 import unittest
 import random
-from obliv import sftp
-from .get_ssh_info import get_info
 
 def randbytes(s):
     return bytes(random.getrandbits(8) for _ in range(s))
 
 class TestSFTP(unittest.TestCase):
     def setUp(self):
-        self.info = get_info()
+        global sftp
+        try:
+            from obliv import sftp
+            from . import get_ssh_info
+        except ImportError:
+            self.skipTest("Error importing sftp module. Maybe paramiko is not installed?")
+
+        self.info = get_ssh_info.load_info()
+        if self.info is None:
+            self.skipTest('Could not load ssh info. Run "python3 -m tests.get_ssh_info" to set it up.')
+
         random.seed(0xf00dface)
 
     def test_sftp(self):
