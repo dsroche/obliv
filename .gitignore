@@ -1,0 +1,7 @@
+.*.swp
+.swp
+*~
+__pycache__/
+venv/
+*.egg-info/
+/tests/ssh_info.json
