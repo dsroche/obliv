@@ -2,6 +2,8 @@
   obliv: Variable-Sized Block Oblivious RAM with HIRB dictionary
 ==================================================================
 
+.. contents::
+
 Overview
 ========
 
@@ -83,8 +85,8 @@ server to connect to (and how), run::
 
     python3 -m tests.get_ssh_info
 
-Package Overview
-================
+Package Structure
+=================
 
 Storage
 -------
