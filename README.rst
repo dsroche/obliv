@@ -31,7 +31,8 @@ for anything important.
 Installing
 ==========
 
-The ``obliv`` package requires ``pycrypto`` and ``paramiko``,
+The ``obliv`` package is based on Python3, and I think it requires
+version 3.4 or later. You will also need ``pycrypto`` and ``paramiko``,
 which are both freely available through PyPI and pip_.
 
 .. _pip: https://pip.pypa.io/en/latest/installing/
@@ -46,7 +47,7 @@ if you want to be in "edit mode" so you can edit package files as needed.
 
 If you are hesitant to introduce the ``obliv`` package globally, you
 can use Python's virtualenv_ system to make a mini-container for everything
-it needs. For example:
+it needs. For example::
 
     pip3 install virtualenv wheel   # install virtualenv
     virtualenv venv                 # put package stuff in venv folder
@@ -57,6 +58,8 @@ it needs. For example:
 
 Or of course you could install ``pycrypto`` and ``paramiko`` in any
 other way, add this directory to your Python path, and just go from there.
+
+.. _virtualenv: https://virtualenv.pypa.io/en/stable/
 
 Test Programs
 =============
