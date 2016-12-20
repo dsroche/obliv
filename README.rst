@@ -65,12 +65,12 @@ Test Programs
 =============
 
 There are some unit tests in the ``tests/`` directory. To run them all,
-just do:
+just do::
 
     python3 -m unittest -v
 
-from this directory, which will automagically find the test cases and run
-them. To run just one test case, such as ``test_fstore``, do:
+from the top-level directory, which will automagically find the test cases 
+and run them. To run just one test case, such as ``test_fstore``, do::
 
     python3 -m tests.test_fstore -v
 
