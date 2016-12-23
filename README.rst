@@ -78,10 +78,28 @@ and run them. To run just one test case, such as ``test_fstore``, do::
 
     python3 -m tests.test_fstore -v
 
-In order to test the SSH storage options, you need to connect using
-public/private keys and store information about what server to connect to.
-By default these tests are skipped. To save the information on what
-server to connect to (and how), run::
+SSH Connection
+==============
+
+The ``mt_ssh_store`` class supports storage in files on a remote machine,
+with communication over persistent SSH connections. In order to support
+this capability, you must have the ``paramiko`` package installed (see above),
+and you must have public/private key authentication to the server in
+question. 
+
+(The ``ssh-keygen`` program is a common command-line tool to create
+such a public-private key pair, and the ``ssh-copy-id`` utility can be
+used to copy your generated public key to the remote server.)
+
+The ``ssh_info.SSHInfo`` class is used to store information about connecting
+to a remote server. See the documentation in that class for details on how
+to initialize an ``SSHInfo`` or save (and later load) this information in
+JSON format.
+
+There are some tests for the SSH connections that also need some connection
+information in order to test the relevant parts of the package. These will
+be skipped by default; to enter the server and key information that
+will enable them, run::
 
     python3 -m tests.get_ssh_info
 

@@ -11,6 +11,72 @@ import paramiko
 
 logger = logging.getLogger(__name__)
 
+def input_ssh_info():
+    """Prompts the user for the relevant fields and returns an SSHInfo instance.
+    
+    In case of error or user abort, returns None."""
+
+    print("Please enter the following info on an SSH server to connect to.")
+    print("The default values are in [brackets] if you enter nothing.")
+    print("Entering a capital Q for any entry quits.")
+
+    data = [
+        ('hostname', 'remote server', 'localhost', str),
+        ('port', 'remote port', 22, int),
+        ('username', 'remote username', getpass.getuser(), str),
+        ('fold', 'folder on remote server', 'obliv_store', str),
+        ('privkey', 'private key file',
+         os.path.expanduser('~/.ssh/id_rsa'), 'file'),
+        ('keypass', 'passphrase for private key', '', "password"),
+        ('knownhosts', 'known hosts file',
+         os.path.expanduser('~/.ssh/known_hosts'), 'file'),
+    ]
+
+    d = {}
+    for kname, pstr, default, typ in data:
+        prompt = kname + ' [' + str(default) + ']: '
+        if typ == "password":
+            res = getpass.getpass(prompt)
+            typ = str
+        else:
+            res = input(prompt)
+
+        res = res.strip()
+        if res == '':
+            res = default
+        elif res == 'Q':
+            del d
+            return None
+
+        if typ == 'file':
+            if not os.path.exists(res):
+                print("ERROR: file not found. Deleting info and aborting.")
+                del d
+                return None
+        else:
+            res = typ(res)
+
+        d[kname] = res
+        del res
+
+    d['needpass'] = (d['keypass'] != '')
+
+    info = dict_to_ssh_info(d, d['keypass'])
+    del d['keypass']
+
+    tryit = input('Try connecting now? [Y]: ').strip()
+    if not tryit or tryit.lower().startswith('y'):
+        try:
+            with sftp.SFTP(info):
+                print("Connection successful")
+        except:
+            print("ERROR: The connection did not go through. Deleting info and aborting.")
+            del info
+            return None
+
+    return info
+
+
 class SSHInfo():
     """All the information needed to get an SSH connection to use as ORAM storage."""
 
@@ -138,68 +204,3 @@ def ssh_info_to_file(filename, info):
     with open(filename, 'w') as fout:
         json.dump(d, fout, indent=4)
 
-
-def input_ssh_info():
-    """Prompts the user for the relevant fields and returns an SSHInfo instance.
-    
-    In case of error or user abort, returns None."""
-
-    print("Please enter the following info on an SSH server to connect to.")
-    print("The default values are in [brackets] if you enter nothing.")
-    print("Entering a capital Q for any entry quits.")
-
-    data = [
-        ('hostname', 'remote server', 'localhost', str),
-        ('port', 'remote port', 22, int),
-        ('username', 'remote username', getpass.getuser(), str),
-        ('fold', 'folder on remote server', 'obliv_store', str),
-        ('privkey', 'private key file',
-         os.path.expanduser('~/.ssh/id_rsa'), 'file'),
-        ('keypass', 'passphrase for private key', '', "password"),
-        ('knownhosts', 'known hosts file',
-         os.path.expanduser('~/.ssh/known_hosts'), 'file'),
-    ]
-
-    d = {}
-    for kname, pstr, default, typ in data:
-        prompt = kname + ' [' + str(default) + ']: '
-        if typ == "password":
-            res = getpass.getpass(prompt)
-            typ = str
-        else:
-            res = input(prompt)
-
-        res = res.strip()
-        if res == '':
-            res = default
-        elif res == 'Q':
-            del d
-            return None
-
-        if typ == 'file':
-            if not os.path.exists(res):
-                print("ERROR: file not found. Deleting info and aborting.")
-                del d
-                return None
-        else:
-            res = typ(res)
-
-        d[kname] = res
-        del res
-
-    d['needpass'] = (d['keypass'] != '')
-
-    info = dict_to_ssh_info(d, d['keypass'])
-    del d['keypass']
-
-    tryit = input('Try connecting now? [Y]: ').strip()
-    if not tryit or tryit.lower().startswith('y'):
-        try:
-            with sftp.SFTP(info):
-                print("Connection successful")
-        except:
-            print("ERROR: The connection did not go through. Deleting info and aborting.")
-            del info
-            return None
-
-    return info
